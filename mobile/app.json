@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Eigen",
+    "slug": "eigen-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "eigen",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Eigen uses the camera to photograph handwritten mathematics for recognition.",
+        "NSPhotoLibraryUsageDescription": "Eigen reads a chosen image of handwritten mathematics for recognition."
+      }
+    },
+    "android": {
+      "permissions": [
+        "android.permission.CAMERA"
+      ],      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Eigen reads a chosen image of handwritten mathematics for recognition.",
+          "cameraPermission": "Eigen uses the camera to photograph handwritten mathematics for recognition."
+        }
+      ]
+    ]
+  }
+}

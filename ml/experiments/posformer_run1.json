@@ -1,0 +1,223 @@
+{
+ "ckpt": "checkpoints\\posformer-best.ckpt",
+ "polarity": "b",
+ "beam": {
+  "beam_size": 10,
+  "max_len": 200,
+  "alpha": 1.0,
+  "early_stopping": false,
+  "temperature": 1.0
+ },
+ "results": [
+  {
+   "id": "000a4e8ca49c5a1c",
+   "gt": "(x-y)/sqrt(2)",
+   "pred": "X - y / 5 q ^ { \\prime } + ( 2 )",
+   "score": -1.4072484970092773,
+   "latency_s": 17.814
+  },
+  {
+   "id": "001083e26028da36",
+   "gt": "\\nabla I=(I_{x},I_{y})",
+   "pred": "\\frac { I } { I } = [ X ] { \\frac { 1 } { I , I } |",
+   "score": -2.0244290828704834,
+   "latency_s": 32.909
+  },
+  {
+   "id": "0017bb5822bcba69",
+   "gt": "P=P(C(Z))",
+   "pred": "| I | I | <sos> | I |",
+   "score": -1.0026423931121826,
+   "latency_s": 7.885
+  },
+  {
+   "id": "002ae6d5dd4173e4",
+   "gt": "x_{1}-x_{2}+x_{0}=0",
+   "pred": "X _ { 1 } - X _ { 2 } + X _ { 0 } = X",
+   "score": -0.24577057361602783,
+   "latency_s": 29.046
+  },
+  {
+   "id": "00386113d577085b",
+   "gt": "\\langle a_{0},a_{1},...\\rangle\\in R^{\\omega}",
+   "pred": "| a _ { a } , a _ { 1 } , | t | \\leq | t |",
+   "score": -1.5208326578140259,
+   "latency_s": 28.512
+  },
+  {
+   "id": "003ca9082c7047d3",
+   "gt": "\\partial_{i}f=\\frac{\\partial f}{\\partial\\xi^{i}}:=\\frac{\\partial\\overline{f}}{\\partial\\xi^{i}}",
+   "pred": "\\sum \\limits _ { i } I = \\frac { 0 f } { d y ^ { 2 } } = \\frac { 7 } { 2 z ^ { 1 } }",
+   "score": -0.3784816861152649,
+   "latency_s": 57.327
+  },
+  {
+   "id": "004c9413be3ff1be",
+   "gt": "\\langle A\\rangle_{\\psi}=||A\\psi||^{2}",
+   "pred": "| t | \\leq | t | \\leq | t | \\leq | t |",
+   "score": -1.253115177154541,
+   "latency_s": 21.892
+  },
+  {
+   "id": "004fc8d3f626f1d9",
+   "gt": "\\delta_{j,j_{1}}\\delta_{m,m_{1}}",
+   "pred": "\\lim \\limits _ { i } ^ { \\int \\limits _ { 1 } ^ { \\prime } x } | x _ { 1 } \\frac { 1 } { 1 }",
+   "score": -1.5394227504730225,
+   "latency_s": 45.603
+  },
+  {
+   "id": "0052b8e13b5f4a36",
+   "gt": "w(\\neg\\theta)=F_{\\neg}(w(\\theta))",
+   "pred": "H ( I - I ) = I ( \\theta )",
+   "score": -2.8507463932037354,
+   "latency_s": 19.132
+  },
+  {
+   "id": "00692074bbc0f678",
+   "gt": "t\\longrightarrow F(t,t_{0},x)",
+   "pred": "\\lim \\limits _ { 1 } ^ { \\prime } \\int \\limits _ { 1 } \\tan ( x )",
+   "score": -1.650944471359253,
+   "latency_s": 25.255
+  },
+  {
+   "id": "006badbfc63bbd21",
+   "gt": "p=(p_{x},p_{y},p_{z})",
+   "pred": "| x - | x | , | x | \\cdot | x |",
+   "score": -2.1386613845825195,
+   "latency_s": 18.568
+  },
+  {
+   "id": "0082d4aa943b9f8c",
+   "gt": "|\\frac{d^{2}y}{dx^{2}}|\\approx\\frac{1}{R}",
+   "pred": "| d ^ { 2 } \\frac { y } { 1 x ^ { 2 } } | = \\frac { 1 } { R }",
+   "score": -0.38966405391693115,
+   "latency_s": 29.66
+  },
+  {
+   "id": "0083f66ddd05c46c",
+   "gt": "m_{i,j}=x^{i}\\cdot x^{j}",
+   "pred": "\\lim \\limits _ { i j } = x ^ { i } - x ^ { j }",
+   "score": -0.5062437057495117,
+   "latency_s": 19.366
+  },
+  {
+   "id": "0090db2a639b5c98",
+   "gt": "S_{ijk}\\rightarrow S_{ij}(\\omega_{k})",
+   "pred": "\\sum \\limits _ { i , L \\geq \\int \\limits _ { \\prime } ( w _ { k } )",
+   "score": -1.6093543767929077,
+   "latency_s": 37.936
+  },
+  {
+   "id": "00915f0ffe17930e",
+   "gt": "(g^{a}modp,g,p)",
+   "pred": "| a ^ { G } | \\sin | x | , y , f |",
+   "score": -1.4753592014312744,
+   "latency_s": 26.556
+  },
+  {
+   "id": "009d124a50399bba",
+   "gt": "J_{i}=\\sum_{j}L_{ij}\\frac{\\partial F_{j}}{\\partial x_{j}}",
+   "pred": "\\int \\limits _ { i } = \\sum \\limits _ { j } L _ { i j } \\frac { f _ { i } } { X _ { i } }",
+   "score": -0.36276865005493164,
+   "latency_s": 61.131
+  },
+  {
+   "id": "009fb93aab47d6f5",
+   "gt": "\\{f_{X}(\\cdot;\\theta)|\\theta\\in\\Theta\\}",
+   "pred": "\\sum \\limits _ { X } | t | , \\theta | \\leq | t | \\leq | t |",
+   "score": -1.8684993982315063,
+   "latency_s": 36.474
+  },
+  {
+   "id": "00ad7566b9f1d872",
+   "gt": "\\dot{x}(t)=f(x(t))",
+   "pred": "| x | x | x | t | \\int | x | \\leq | x |",
+   "score": -1.4689651727676392,
+   "latency_s": 19.804
+  },
+  {
+   "id": "00ba90fe7f71d8c6",
+   "gt": "\\Omega((logn)/n^{2})",
+   "pred": "\\{ ( \\lim \\limits _ { N } l ^ { 2 } )",
+   "score": -1.6488397121429443,
+   "latency_s": 24.398
+  },
+  {
+   "id": "00c46c9b07b39bb7",
+   "gt": "l_{n}=kl_{n}\\cdot\\frac{b_{n}}{b_{a}}\\cdot\\frac{s_{n}}{s_{a}}",
+   "pred": "y _ { n } = | < \\frac { b _ { n } } { b _ { a } } \\frac { b _ { a } } { \\int \\limits _ { a } }",
+   "score": -0.4863894283771515,
+   "latency_s": 87.991
+  },
+  {
+   "id": "00d4fc6636cbf2d9",
+   "gt": "\\tilde{g}_{n}=[\\begin{matrix}g_{n}\\\\ \\gamma_{n}\\end{matrix}]",
+   "pred": "\\alpha _ { n } = | x _ { n } | y _ { n } |",
+   "score": -0.45974698662757874,
+   "latency_s": 20.379
+  },
+  {
+   "id": "00db5331b85f4d47",
+   "gt": "N=|V|",
+   "pred": "| I | I | I |",
+   "score": -1.0807996988296509,
+   "latency_s": 5.886
+  },
+  {
+   "id": "00eaf4f2d3d20bb1",
+   "gt": "B=ln(-b)",
+   "pred": "| x | - | x | - | x |",
+   "score": -1.163952350616455,
+   "latency_s": 15.315
+  },
+  {
+   "id": "00fcddfee1ebfee6",
+   "gt": "2sin(x/2)",
+   "pred": "\\sum \\limits _ { \\sin C } | x | \\sin |",
+   "score": -1.7360559701919556,
+   "latency_s": 14.526
+  },
+  {
+   "id": "00fee560e6c9af79",
+   "gt": "\\sqrt{1-\\omega^{2}r_{0}^{2}}",
+   "pred": "\\sqrt { 1 - L ) ^ { 2 } r _ { \\gamma } r ^ { 2 }",
+   "score": -1.1610113382339478,
+   "latency_s": 26.503
+  },
+  {
+   "id": "010d0f9e951a7a44",
+   "gt": "x_{i}^{\\prime}\\equiv\\frac{1}{1+e^{-\\frac{x_{i}-\\mu_{i}}{\\sigma_{i}}}}",
+   "pred": "X _ { i } = \\frac { 1 } { 1 } e ^ { 1 } \\frac { - y _ { i - u _ { i } } { 1 } }",
+   "score": -1.0080668926239014,
+   "latency_s": 54.563
+  },
+  {
+   "id": "010d4fea2361f01f",
+   "gt": "Inj(M_{i})<\\epsilon(n)",
+   "pred": "| \\int \\limits _ { i } l _ { L } ) C \\sum ( M )",
+   "score": -1.9152648448944092,
+   "latency_s": 25.757
+  },
+  {
+   "id": "0111fa141bb73b48",
+   "gt": "-a^{n}u[-n-1]",
+   "pred": "- a ^ { n } - \\sqrt [ 1 ] - 1 - I",
+   "score": -1.1300559043884277,
+   "latency_s": 19.457
+  },
+  {
+   "id": "0114e881d8b22bbb",
+   "gt": "(\\Lambda(A):A\\in B_{b}(S))",
+   "pred": "| t | \\leq | t | \\leq | - | t | \\leq | x | ) |",
+   "score": -1.829451560974121,
+   "latency_s": 32.695
+  },
+  {
+   "id": "011f1f41eb55b661",
+   "gt": "(\\frac{lnN}{N})\\rightarrow0",
+   "pred": "| \\frac { \\sin N } { N } | \\geq 0",
+   "score": -1.3582510948181152,
+   "latency_s": 14.899
+  }
+ ]
+}

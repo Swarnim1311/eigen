@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+backend/.venv/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / Expo / React Native
+node_modules/
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+.expo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# Native builds
+*.apk
+*.aab
+*.ipa
+android/build/
+ios/build/
+ios/Pods/
+
+# ML: datasets, checkpoints, experiments (never commit)
+ml/data/
+ml/checkpoints/
+ml/experiments/*/checkpoints/
+ml/experiments/*/runs/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.ckpt
+*.safetensors
+datasets/
+data/
+
+# Local uploads / caches / secrets
+uploads/
+tmp/
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+google-services.json
+GoogleService-Info.plist
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# Git
+*.orig

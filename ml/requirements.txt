@@ -1,0 +1,15 @@
+# Eigen ML experiment env (Phase 1) — CPU-only PyTorch, Windows py3.11.
+# Created: ml/.venv (python -m venv ml\.venv)
+# Installed: ml\.venv\Scripts\pip.exe install --index-url https://download.pytorch.org/whl/cpu torch torchvision pillow numpy
+#            ml\.venv\Scripts\pip.exe install einops torchmetrics opencv-python-headless
+# Full freeze: ml/requirements.lock.txt
+# NOTE: opencv/torchvision/einops/torchmetrics are needed only to run the
+# unmodified PosFormer preprocessing/model code (repo pins ancient versions;
+# modern equivalents used instead — see docs/project_context/RESEARCH.md).
+torch==2.14.1+cpu
+torchvision==0.29.1+cpu
+pillow==12.3.0
+numpy==2.4.6
+einops==0.8.2
+torchmetrics==1.9.0
+opencv-python-headless==5.0.0.93
