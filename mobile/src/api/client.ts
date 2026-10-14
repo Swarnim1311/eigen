@@ -51,6 +51,28 @@ export function getApiBaseUrl(): string {
   return resolveBaseUrl();
 }
 
+/**
+ * anySignal() with a manual fallback for JS runtimes that predate it.
+ * Semantics match the native helper: the combined signal aborts when ANY
+ * input aborts. Callers keep distinguishing timeout vs caller-cancel exactly
+ * as before (via their own controller/signal state) — this only combines.
+ */
+function anySignal(signals: AbortSignal[]): AbortSignal {
+  const nativeAny = (AbortSignal as unknown as {
+    any?: (s: AbortSignal[]) => AbortSignal;
+  }).any;
+  if (typeof nativeAny === 'function') return nativeAny.call(AbortSignal, signals);
+  const ctrl = new AbortController();
+  for (const s of signals) {
+    if (s.aborted) {
+      ctrl.abort();
+      break;
+    }
+    s.addEventListener('abort', () => ctrl.abort(), { once: true });
+  }
+  return ctrl.signal;
+}
+
 const MATH_TIMEOUT_MS = 30_000;
 /** CPU inference averages ~29 s and peaks near 90 s (Phase-1 baseline). */
 const RECOGNIZE_TIMEOUT_MS = 180_000;
@@ -179,7 +201,7 @@ export async function recognizeImage(
 ): Promise<RecognizeResponse> {
   const { signal: ts, cancel } = withTimeout(RECOGNIZE_TIMEOUT_MS);
   const combined = signal
-    ? AbortSignal.any([signal, ts])
+    ? anySignal([signal, ts])
     : ts;
   try {
     const name = imageUri.split('/').pop()?.split('?')[0] || 'math.jpg';
@@ -229,7 +251,7 @@ export async function evaluateExpression(
     return await postJson(
       '/api/v1/math/evaluate',
       { expression: body.expression, variables: body.variables ?? {}, latex: body.latex ?? false },
-      signal ? AbortSignal.any([signal, ts]) : ts,
+      signal ? anySignal([signal, ts]) : ts,
       isEvaluateResponse,
     );
   } finally {
@@ -246,7 +268,7 @@ export async function simplifyExpression(
     return await postJson(
       '/api/v1/math/simplify',
       { expression: body.expression, latex: body.latex ?? false },
-      signal ? AbortSignal.any([signal, ts]) : ts,
+      signal ? anySignal([signal, ts]) : ts,
       isSimplifyResponse,
     );
   } finally {
@@ -263,7 +285,7 @@ export async function solveEquation(
     return await postJson(
       '/api/v1/math/solve',
       { equation: body.equation, variable: body.variable },
-      signal ? AbortSignal.any([signal, ts]) : ts,
+      signal ? anySignal([signal, ts]) : ts,
       isSolveResponse,
     );
   } finally {

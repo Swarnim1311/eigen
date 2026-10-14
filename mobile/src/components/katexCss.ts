@@ -2,7 +2,14 @@
  * Bundled KaTeX stylesheet (verbatim from the pinned `katex@0.16.22`
  * install — do NOT hand-edit).
  *
- * Regenerate after any katex upgrade:
+ * License attribution (MIT compliance): this stylesheet is part of KaTeX,
+ * Copyright (c) 2013–2020 Khan Academy and other contributors, licensed under
+ * the MIT License (full text in `node_modules/katex/LICENSE`;
+ * https://github.com/KaTeX/KaTeX/blob/main/LICENSE). The MIT permission
+ * notice is preserved here by reference: this file is an unmodified copy of
+ * KaTeX's `dist/katex.min.css`, used under the same MIT terms.
+ *
+ * Regenerate after any katex upgrade (and re-check the LICENSE file):
  *   node "C:\\Users\\Swarnim\\AppData\\Local\\Temp\\opencode\\gen-katex-css.js"
  *
  * NOTE: `@font-face` URLs inside resolve to nothing in the LatexView WebView

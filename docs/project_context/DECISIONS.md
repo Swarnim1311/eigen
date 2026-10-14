@@ -1,5 +1,16 @@
 # DECISIONS — Eigen
 
+## 2026-10-14T08:12:31+05:30 — Recovery verification choices
+
+22. **Live serving default stays repo-exact temperature 1.0; T=0.5 remains an
+    offline experimental result.** Reason: n=40 evidence (30 tuned + 10 unseen)
+    shows only a modest −0.05 mean-CER win with exact-match still 0/40 — not a
+    production-readiness basis. Enabling T=0.5 in `recognizer_worker.py` is a
+    one-line reversible change but REQUIRES re-running the gated real-worker
+    E2E after any such change. Consequence: `recognizer_worker.py` untouched;
+    `run_posformer.py` CLI overrides default to repo values so plain runs
+    reproduce released-model behavior exactly.
+
 ## 2026-10-13T13:29:00+05:30 — Phase 3 verification choices
 
 17. **System crop editor ONLY (`allowsEditing`); no custom camera preprocessing or

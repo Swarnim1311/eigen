@@ -7,7 +7,9 @@ Cross-platform app: photograph handwritten math, get recognized LaTeX/symbols, c
 - **Mobile:** React Native + Expo (TypeScript) + Expo Router. Android via Android Studio/emulator or physical device; iOS via physical iPhone + EAS cloud builds.
 - **Backend:** Python 3.11 + FastAPI + Pydantic.
 - **ML:** PyTorch + PosFormer HMER checkpoint (experimental baseline: 0/30 exact,
-  CER 0.912 — see `ml/reports/inference_baseline.md`). SymPy behind a restricted parser.
+  CER 0.912 — see `ml/reports/inference_baseline.md`; T=0.5 decoding experiment:
+  0.860 on the same 30, 0/40 exact both ways — experimental only, serving still
+  repo-exact T=1.0, see `ml/reports/recognition_temp05.md`). SymPy behind a restricted parser.
 - **Persistence:** SQLite (local).
 - **Tests:** Pytest (backend), Jest/mobile tests later.
 
@@ -40,6 +42,7 @@ uvicorn app.main:app --reload --port 8000
 # recognize (experimental model): POST http://127.0.0.1:8000/api/v1/recognize  (multipart image)
 # readiness: http://127.0.0.1:8000/api/v1/ready
 python -m pytest -q
+# (34 passed + 1 skipped as of 2026-10-14, incl. security regression tests)
 # slow real-model integration (loads 78MB ckpt, ~1 min):
 $env:EIGEN_TEST_WORKER = "1"; python -m pytest -q -k real_worker
 ```
@@ -53,6 +56,7 @@ The recognizer worker needs `ml/.venv` + `ml/checkpoints/posformer-best.ckpt`
 ```powershell
 cd mobile
 npm install
+npm run smoke  # offline checks (KaTeX CSS/version/render, deps); no device needed
 npx expo start
 # Android: press `a` (emulator/device); iOS: physical iPhone via Expo Go/dev build
 ```

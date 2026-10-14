@@ -1,0 +1,36 @@
+{
+ "run1": {
+  "n": 30,
+  "exact": 0,
+  "meanCER": 0.911951782391594,
+  "medianCER": 0.8378378378378378,
+  "oov": 19,
+  "meanLat": 29.241300000000003,
+  "minLat": 5.886,
+  "maxLat": 87.991,
+  "beam": {
+   "beam_size": 10,
+   "max_len": 200,
+   "alpha": 1.0,
+   "early_stopping": false,
+   "temperature": 1.0
+  }
+ },
+ "run2": {
+  "n": 30,
+  "exact": 0,
+  "meanCER": 0.8595639641975475,
+  "medianCER": 0.8666666666666667,
+  "oov": 19,
+  "meanLat": 7.082299999999999,
+  "minLat": 1.712,
+  "maxLat": 19.755,
+  "beam": {
+   "beam_size": 10,
+   "max_len": 200,
+   "alpha": 1.0,
+   "early_stopping": false,
+   "temperature": 0.5
+  }
+ }
+}

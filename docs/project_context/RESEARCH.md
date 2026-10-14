@@ -222,3 +222,58 @@ legacy-stack treatment for an older, weaker, archived model + another 77.5 MB
 download; no evidence it beats PosFormer cross-dataset. Cheapest next accuracy
 lever is CROHME-style rendering + small fine-tune, not switching to BTTR.
 pix2tex comparison and phone-photo gap: untouched (no authorized photos).
+
+## 10. License re-verification (2026-10-13, this machine + authoritative web sources)
+
+Access date for all web claims below: 2026-10-13.
+
+- PosFormer code: README still claims academic-research-only + 2-clause BSD with
+  `TODO: update LICENSE file`; `LICENSE` raw URL → **404 again (still absent)** —
+  Verified (local scratch checkout + web). Unchanged since Phase 1.
+- PosFormer weights (`best.ckpt`): no license terms stated anywhere — Verified
+  absence. Local research inference OK; redistribution/commercial UNRESOLVED.
+- MathWriting data: **CC BY-NC-SA 4.0** — re-confirmed from the paper
+  (arXiv:2404.10690: "placed under CC BY-NC-SA 4.0") and the official repo
+  (`google-research/mathwriting/README.md`: "licensed by Google LLC under CC
+  BY-NC-SA 4.0"; repo code is Apache-2.0). Consequence: eval/research use with
+  attribution is fine; any model fine-tuned on MathWriting inherits NC +
+  ShareAlike → **commercial use of a MathWriting-tuned model is NOT permitted**.
+- CROHME official terms: still not retrievable from this machine (TC11 account
+  wall) — UNRESOLVED, unchanged.
+- KaTeX (bundled CSS in `mobile/src/components/katexCss.ts` since Phase 3 fix):
+  **MIT**, Copyright (c) 2013–2020 Khan Academy — verified in
+  `mobile/node_modules/katex/LICENSE`. Attribution header added to `katexCss.ts`
+  2026-10-13 (MIT compliance). KaTeX fonts (OFL-licensed, NOT bundled) remain
+  system-fallback by design.
+- Third-party libraries (declared licenses from installed package metadata,
+  2026-10-13): backend — sympy BSD, pillow MIT-CMU, pydantic MIT, uvicorn
+  BSD-3-Clause, python-multipart Apache-2.0, httpx BSD-3-Clause, pytest MIT,
+  fastapi field-absent (upstream declares MIT — re-confirm at packaging);
+  ml — torch/torchvision/numpy/opencv/einops all permissive (Apache-2.0/BSD/MIT
+  families); mobile — expo/react/react-native/router/sqlite/image-picker/webview
+  ALL MIT. No copyleft in the dependency closure — Verified (metadata).
+  The ONLY restrictive elements remain model weights + MathWriting data.
+
+Recommendation — academic portfolio demo: current posture is FINE (research use,
+attribution given, no redistribution of weights/data, checkpoint + excerpt stay
+git-ignored and local). Recommendation — commercial release: NOT cleared;
+requires (a) a permissively-licensed or self-trained model + weights with stated
+terms, (b) training data without NC/SA (CROHME commercial terms or own captures),
+(c) re-confirmation of the fastapi license field, (d) own legal review. No legal
+guarantees are made here.
+
+## 11. Recovery verification (2026-10-14T08:12:31+05:30, this machine, no new sources)
+
+- §10 re-checked as-is: PosFormer LICENSE still absent (no re-fetch needed —
+  claim is dated 2026-10-13 and unchanged by any repo file); KaTeX MIT
+  attribution header present in `mobile/src/components/katexCss.ts`
+  (verified in working tree); dependency-license table untouched since
+  2026-10-13 (no installs/upgrades performed in this session — still valid).
+- Recognition numbers in `ml/reports/recognition_temp05.md` re-verified
+  against saved JSONs: run2_summary run1 mean CER 0.91195 → run2 0.85956
+  (n=30, exact 0/30); run3/run4 n=40 each with matching IDs, last-10 IDs
+  identical (unseen confirmation intact). No inconsistency found.
+- Serving posture unchanged: `recognizer_worker.py` untouched (no diff),
+  still repo-exact T=1.0 — the T=0.5 result is experimental and undeployed.
+- Still UNRESOLVED: commercial weight terms, CROHME official terms,
+  fastapi license-field re-confirmation at packaging.

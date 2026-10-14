@@ -1,6 +1,6 @@
 # ROADMAP — Eigen
 
-**Last updated:** `2026-10-13T13:29:00+05:30` (Phase 3 verification & close-out)
+**Last updated:** `2026-10-14T08:12:31+05:30` (Recovery verification; SDK-absent claims corrected)
 
 ## Phase 0 — Foundation + research ✅ COMPLETE (2026-10-09)
 
@@ -11,7 +11,9 @@ Acceptance (all met or explicitly deferred with reason):
 - [x] Manifests pinned (`requirements.txt`, `package.json` + `package-lock.json`).
 - [x] Research with primary-source links + license verification status (`RESEARCH.md`).
 - [x] Implemented vs proposed distinguished; blockers reported, not hidden.
-- [ ] Android SDK validation — BLOCKED (Studio still downloading), reported.
+- [x] Android SDK validation — RESOLVED 2026-10-13 (Studio installed, SDK +
+  `Medium_Phone` AVD present, adb works; `ANDROID_HOME` unset, PATH java still
+  1.8 — see PROJECT_STATE.md). No emulator launched yet.
 
 ## Phase 1 — License review + reproducible inference ✅ COMPLETE (outcome A, 2026-10-10)
 
@@ -34,6 +36,9 @@ Acceptance (all met or explicitly deferred with reason):
       injection, div-zero, limits).
 - [x] `/health` intact; `/api/v1/ready` added (ready/loading/standby/...).
 - [x] 28 passed + 1 gated E2E passed; ruff clean; live uvicorn smoke OK.
+- [x] Recovery 2026-10-14: 34 passed + 1 skipped + gated real-worker 1 passed;
+  `test_security.py` (AST guard + HTTP rejection) green; serving default
+  verified still repo-exact T=1.0.
 - [x] No SQLite history (deferred by design); no new model/dataset downloads.
 
 ## Phase 3 — Mobile capture → result flow (Expo Router) — IMPLEMENTED, PARTIALLY VERIFIED (2026-10-13)
@@ -51,12 +56,30 @@ Implemented (code-inspected + automated checks green, see PROJECT_STATE.md / CHA
   `/math/evaluate` smoke OK.
 
 Still pending — Phase 3 may NOT be called complete until these are done:
-- [ ] End-to-end run on an Android emulator/device (BLOCKED: Android SDK unchecked/absent).
+- [ ] End-to-end run on an Android emulator/device (SDK + `Medium_Phone` AVD
+  present since 2026-10-13; emulator NEVER launched — this is now the gating
+  item, not SDK absence).
 - [ ] iPhone physical test via dev/EAS build (BLOCKED: no device access, no EAS config).
 - [ ] EAS configuration (deliberately not introduced in this phase).
-- [ ] Automated mobile tests (no framework selected; none introduced in this phase).
+- [ ] Automated mobile tests — PARTIAL 2026-10-14: `mobile/tests/smoke.js`
+  (`npm run smoke`) covers KaTeX CSS/version/render/deps with zero new
+  dependencies, but screen-interaction/device tests still do not exist.
 - [ ] Camera preprocessing beyond the OS crop editor (out of scope by decision).
 - [ ] Visual confirmation of KaTeX rendering (CSS fix is code-verified only).
+
+## Recovery — Recognition experiment + reliability checks (COMPLETE, experimental only, 2026-10-14)
+
+- [x] T=0.5 decoding experiment verified against saved JSONs (30-sample:
+  mean CER 0.912 → 0.860; 10 unseen: direction consistent; exact 0/40 both).
+  Recorded in `ml/reports/recognition_temp05.md`; serving default UNCHANGED
+  (T=1.0). Modest win, NOT production readiness — no fine-tune, no worker change.
+- [x] License re-verification (§10 RESEARCH.md, KaTeX MIT attribution).
+  Commercial use still NOT cleared (weights unstated, MathWriting NC-SA,
+  CROHME terms unresolved, fastapi field to re-confirm).
+- [x] Backend 34+1 + gated worker green; `ruff` clean; ML smoke OK; mobile
+  smoke + `tsc` clean; `anySignal()` fallback in API client.
+- [ ] GitHub push of the second commit (pending at time of writing).
+- [ ] Emulator/device E2E (P3-VERIFY) — still the next milestone, not started.
 
 ## Phase 4 — Baseline + fine-tune experiments
 

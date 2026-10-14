@@ -1,0 +1,34 @@
+{
+ "ckpt": "checkpoints\\posformer-best.ckpt",
+ "polarity": "b",
+ "beam": {
+  "beam_size": 10,
+  "max_len": 200,
+  "alpha": 1.0,
+  "early_stopping": false,
+  "temperature": 0.5
+ },
+ "results": [
+  {
+   "id": "000a4e8ca49c5a1c",
+   "gt": "(x-y)/sqrt(2)",
+   "pred": "x - y / 5 q ^ { r } + ( 2 )",
+   "score": -1.8148877620697021,
+   "latency_s": 5.607
+  },
+  {
+   "id": "001083e26028da36",
+   "gt": "\\nabla I=(I_{x},I_{y})",
+   "pred": "I - I - I - I , I",
+   "score": -2.21530818939209,
+   "latency_s": 5.686
+  },
+  {
+   "id": "0017bb5822bcba69",
+   "gt": "P=P(C(Z))",
+   "pred": "| I | I | I |",
+   "score": -0.533692479133606,
+   "latency_s": 1.983
+  }
+ ]
+}

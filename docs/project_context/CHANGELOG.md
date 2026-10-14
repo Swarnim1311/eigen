@@ -1,5 +1,86 @@
 # CHANGELOG — Eigen
 
+## 2026-10-14T08:12:31+05:30 — Recovery verification + second-commit baseline (build mode)
+
+Resumed from the read-only recovery audit (baseline `5f45d5a`, 8 modified +
+10 untracked, no remote, no staged changes — confirmed unchanged before
+proceeding). No experiments repeated, no training, no emulator launch, no
+dependency installs/upgrades.
+
+Commands run and actual results (existing envs only):
+- `backend/`: `.\.venv\Scripts\python.exe -m pytest tests` → **34 passed,
+  1 skipped** (gated), 1 warning (starlette BlockingPortal deprecation,
+  upstream/harmless), 1.12 s, exit 0. (+6 vs 2026-10-13: 2 new parser edge
+  tests + 4 new security tests, all green.)
+- `backend/` gated: `EIGEN_TEST_WORKER=1 ... -k real_worker` → **1 passed,
+  34 deselected** in 10.59 s, exit 0 (ckpt `posformer-best.ckpt` 78,508,976 B
+  already on disk; no downloads). Proves the `run_posformer.BEAM` alias kept
+  for `recognizer_worker.py` still serves repo-exact inference.
+- `backend/`: `ruff check app tests` → All checks passed, exit 0.
+- `ml/`: `.\.venv\Scripts\python.exe scripts\smoke_check.py` → 14 PASS lines
+  (vocab-113, canon/lev vectors, run1 + run2_temp05 schema, render/label
+  fixtures), `SMOKE OK`, exit 0.
+- `mobile/`: `npm run smoke` (`node tests/smoke.js`) → katex-css 23352 B,
+  katex 0.16.22 == bundled 0.16.22, 4 valid renders, invalid→fallback,
+  13 deps resolve, `SMOKE OK`, exit 0 (one benign Node
+  MODULE_TYPELESS_PACKAGE_JSON warning, no behavior impact).
+- `mobile/`: `npx tsc --noEmit` → clean, exit 0.
+
+Recognition re-verified from saved JSONs (no re-inference): `run2_summary.json`
+run1 T=1.0 mean CER 0.91195 / median 0.83784 / lat mean 29.24 s vs run2 T=0.5
+mean 0.85956 / median 0.86667 / lat mean 7.08 s (n=30 both, exact 0/30 both);
+`run3_l40_t10.json` / `run4_l40_t05.json` both n=40 with matching IDs, last 10
+IDs identical across runs (unseen rows 31–40). Report values in
+`ml/reports/recognition_temp05.md` match the artifacts. Serving default
+VERIFIED UNCHANGED: `recognizer_worker.py` line 86 still calls
+`model.beam_search(img_t, mask, **rp.BEAM)` with `BEAM` pinned to repo-exact
+T=1.0 (`git diff --stat` on the worker is empty); T=0.5 remains experimental
+and undeployed. See DECISIONS.md §22.
+
+Docs updated: PROJECT_STATE.md (recovery section, test counts, experiment
+pointer), ROADMAP.md (stale SDK-absent lines corrected, recovery entry),
+ARCHITECTURE.md (34+1 tests, CLI overrides, anySignal, smoke checks),
+RESEARCH.md (§11 verification addendum), DECISIONS.md (§22 serving default),
+README.md (test counts + experimental T=0.5 pointer). No Android/iOS
+functionality claimed. Phase 4 NOT started.
+
+## 2026-10-13T13:59:48+05:30 — Git safety baseline + Android readiness (build mode)
+
+Task A (Git): `git status` showed branch `main` with zero commits and 7 untracked
+top-level entries (same as prior audit). Verified `.gitignore` via `git check-ignore`
+(venvs, `mobile/node_modules`, `ml/checkpoints`, `ml/data`, real `.env` all ignored;
+only placeholder `.env.example` ×2 committable). Secret scan over worktree + staged
+diff: no keys/tokens/passwords/private-keys (sole `keystore` hit = the ignore rule).
+Size audit: no candidate file >1 MB (package-lock.json 269 KB, katexCss.ts 24 KB,
+posformer_run1.json 6.6 KB). No `.gitignore` corrections needed. Staged 68 files
+(`git add -A`), inspected staged list + diff, then initial commit
+`5f45d5ac2d5bf9e0be0263f68ad7de5ba97f2bf0` `chore: establish Eigen project baseline`
+(69 files, 12,625 insertions). Excluded by ignore rules (verified, not deleted):
+`backend/.venv`, `ml/.venv`, `mobile/node_modules`, `ml/checkpoints/`,
+`ml/data/`. No `git clean`/reset; identity Swarnim Mane. No app/backend code touched.
+
+Task B (Android, read-only — nothing installed, upgraded, launched, or built):
+- Android Studio: INSTALLED (`C:\Program Files\Android\Android Studio\bin\studio64.exe`).
+- SDK `%LOCALAPPDATA%\Android\Sdk`: platform-tools, emulator 37.2.12.0, build-tools
+  36.0.0, platform android-37.0, `system-images/android-37.0/google_apis_playstore/x86_64`, licenses.
+- AVD: `Medium_Phone` (target android-37.0) exists; emulator never launched (out of
+  scope for this audit).
+- `ANDROID_HOME`/`ANDROID_SDK_ROOT`: unset. `JAVA_HOME`: Adoptium JDK 21.0.8.9
+  (suitable); PATH `java`: still 1.8.0_401 (must not build with it).
+- adb 1.0.41 works; `adb devices` → empty (no emulator running, no USB device).
+  `adb`/`emulator` not on PATH (invoked by full path).
+- Expo: `app.json` android CAMERA permission + adaptive icons + picker strings OK;
+  no `android.package`; no `eas.json`/EAS config. Emulator→host backend path
+  `10.0.2.2:8000` matches the app client fallback (`src/api/client.ts`).
+- Verdict: setup can PROBABLY run `npx expo start --android` (Expo Go on
+  `Medium_Phone`), but Android is NOT claimed working — launch + observed run is the
+  next milestone (P3-VERIFY), not part of this session.
+
+Docs updated: PROJECT_STATE.md (this session section, env table, blockers 1–2),
+CHANGELOG.md (this entry). P3-VERIFY NOT marked complete. Phase 4 NOT started.
+Post-commit working tree: `M PROJECT_STATE.md`, `M CHANGELOG.md` (this session's
+doc updates, left uncommitted).
+
 ## 2026-10-13T13:29:00+05:30 — Phase 3 verification & close-out (build mode)
 
 Scope: verify + document the pre-existing mobile MVP. No rebuild, no new/EAS/mobile-test

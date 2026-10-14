@@ -1,6 +1,6 @@
 # PROJECT_STATE — Eigen
 
-**Last updated:** `2026-10-13T13:29:00+05:30` (Phase 3 verification & close-out session)
+**Last updated:** `2026-10-14T08:12:31+05:30` (Recovery verification + second-commit session)
 
 ## Objective
 
@@ -110,6 +110,59 @@ still pending (see Blockers).**
   `/api/v1/ready` standby (honest pre-load), `/math/evaluate` sqrt(16)+2^3 → 12.
   NO end-to-end run on any emulator, simulator, or physical device.
 
+## Completed (Git baseline + Android readiness, 2026-10-13T13:59:48+05:30)
+
+- Git: prior audit's "no commits, all untracked" confirmed still true (branch `main`,
+  `git log` → "no commits yet"). Safety audit passed: `.gitignore` verified to exclude
+  venvs (`backend/.venv`, `ml/.venv`), `mobile/node_modules`, `ml/checkpoints`,
+  `ml/data`, real `.env` files (only `.env.example` ×2 tracked, placeholder content
+  confirmed), caches, native builds, keystores — all via `git check-ignore`. Secret
+  scan of staged diff clean (sole `keystore` hit = the `*.keystore` ignore rule
+  itself). No file >1 MB among candidates (largest: `package-lock.json` 269 KB,
+  `katexCss.ts` 24 KB). No `.gitignore` changes needed.
+- Initial commit created: `5f45d5ac2d5bf9e0be0263f68ad7de5ba97f2bf0`
+  `chore: establish Eigen project baseline` — 69 files, 12,625 insertions.
+  Deliberately excluded (untracked, ignored): `backend/.venv`, `ml/.venv`,
+  `mobile/node_modules`, `ml/checkpoints` (78.5 MB `best.ckpt`), `ml/data`
+  (MathWriting excerpt). Working tree clean after commit.
+- Android readiness (read-only checks, NOTHING installed/launched):
+  Android Studio INSTALLED (`C:\Program Files\Android\Android Studio\bin\studio64.exe`);
+  SDK present at `%LOCALAPPDATA%\Android\Sdk` (platform-tools, emulator 37.2.12.0,
+  build-tools 36.0.0, platform android-37.0, google_apis_playstore x86_64 system
+  image, licenses); AVD `Medium_Phone` (target android-37.0) EXISTS; adb 1.0.41
+  works, `adb devices` → empty (no emulator running, no physical device).
+  `ANDROID_HOME`/`ANDROID_SDK_ROOT` UNSET; `JAVA_HOME` = Adoptium JDK 21.0.8.9
+  (suitable, 17+), but PATH `java` is still 1.8.0_401 (must not be used for builds).
+  Expo side: `app.json` has CAMERA permission + adaptive icons + image-picker
+  strings; NO `android.package`; NO `eas.json` (no EAS config).
+- P3-VERIFY is NOT complete and Android is NOT claimed working — no emulator
+  launched, no app run. Next action: launch the `Medium_Phone` AVD, then
+  `npx expo start --android` from `mobile/` (emulator reaches host backend via
+  `10.0.2.2:8000`, matching the client fallback).
+
+## Completed (Recovery verification, 2026-10-14T08:12:31+05:30)
+
+- Pre-existing working tree from the interrupted session verified WITHOUT
+  re-running experiments: `run_posformer.py` CLI overrides (defaults =
+  repo-exact, `BEAM` alias keeps `recognizer_worker.py` untouched);
+  `posformer_run2_temp05.json` + `run2_summary.json` (T=0.5 vs T=1.0 on same
+  30), `posformer_run3/4_l40_*.json` (40+40 with matching IDs, last 10
+  unseen); `ml/reports/recognition_temp05.md` values match the JSONs
+  (run1 mean CER 0.91195 → run2 0.85956; exact 0/40 both ways).
+- Serving default VERIFIED UNCHANGED: `recognizer_worker.py` still uses
+  repo-exact T=1.0 (file untouched — no diff); T=0.5 is experimental only.
+- Tests 2026-10-14 (existing envs, no installs): backend `pytest` **34 passed
+  + 1 skipped** (exit 0) + gated real-worker **1 passed** (10.59 s, exit 0);
+  `ruff` clean; `ml/scripts/smoke_check.py` SMOKE OK (exit 0);
+  `mobile` `npm run smoke` SMOKE OK (exit 0) + `tsc --noEmit` clean.
+  New coverage: parser edge tests (`test_math_parser.py`),
+  `test_security.py` (AST guard + HTTP injection/oversize/degenerate-solve),
+  `anySignal()` fallback (`mobile/src/api/client.ts`), `mobile/tests/smoke.js`.
+- Licensing re-verification (§10 in RESEARCH.md, KaTeX MIT header in
+  `katexCss.ts`) reviewed as-is: accurate, no legal guarantees made.
+- NO device/emulator run, NO EAS config, NO serving-default change, NO
+  Phase 4 work. See CHANGELOG.md for exact commands and outcomes.
+
 ## Environment / dependency status
 
 | Item | Status |
@@ -117,13 +170,17 @@ still pending (see Blockers).**
 | Windows, Node 24.21.0, npm 11.19.0 | Verified working |
 | Python 3.11.9, Git 2.53.0, OpenCode 1.18.35 | Verified working |
 | NVIDIA RTX 4050 Laptop 6 GB, driver 592.82 / 16 GB RAM | Verified via `nvidia-smi` |
-| `backend/.venv` + pinned `requirements.txt` | FastAPI 0.118 + sympy/pillow/multipart; `pytest` 28+1 pass, `ruff` clean |
-| `ml/.venv` + harness | CPU torch 2.14.1; `best.ckpt` loaded via persistent worker (Phase 2) |
- | `mobile/` + `package.json` + `package-lock.json` | Expo 57 six-screen MVP; `tsc --noEmit` clean, `expo --version` 57.0.28, `expo-doctor` 19/21 (react-duplicate + expo/expo-router patch advisories); NO device run, NO automated mobile tests, NO EAS config |
-| Java 1.8.0_401 on PATH | **Unsuitable** for current Android/Gradle; use Studio-bundled JDK 17+ |
-| `ANDROID_HOME` / SDK | **Absent** — Android Studio still downloading |
-| PyTorch / checkpoints / datasets | `ml/.venv` CPU torch 2.14.1; `best.ckpt` verified+loaded; MathWriting excerpt eval-only |
-| `ANDROID_HOME` / SDK | **Absent** — recheck pending (was still downloading in Phase 0) |
+ | `backend/.venv` + pinned `requirements.txt` | FastAPI 0.118 + sympy/pillow/multipart; `pytest` 34+1 pass (2026-10-14) + gated real-worker 1 pass, `ruff` clean |
+ | `ml/.venv` + harness | CPU torch 2.14.1; `best.ckpt` loaded via persistent worker (Phase 2, serving T=1.0 unchanged); `smoke_check.py` OK; T=0.5 experimental results recorded (run2/3/4, NOT deployed) |
+ | `mobile/` + `package.json` + `package-lock.json` | Expo 57 six-screen MVP; `tsc --noEmit` clean, `npm run smoke` OK (katex/version/render/deps), `anySignal()` fallback for pre-`AbortSignal.any` runtimes; NO device run, NO EAS config |
+ | Java on PATH (`java -version` → 1.8.0_401) | **Unsuitable** — must never be used for Gradle builds |
+ | `JAVA_HOME` = Adoptium JDK 21.0.8.9 | Suitable (17+) — use for all Android/Gradle tooling (verified 2026-10-13) |
+ | Android Studio | INSTALLED (verified 2026-10-13; was still downloading in Phase 0) |
+ | Android SDK (`%LOCALAPPDATA%\Android\Sdk`) | Present: platform-tools (adb 1.0.41), emulator 37.2.12.0, build-tools 36.0.0, android-37.0, playstore x86_64 image, licenses |
+ | `ANDROID_HOME` / `ANDROID_SDK_ROOT` | **Unset** (empty) — set before Gradle builds; Expo CLI auto-detects the default path |
+ | Emulator / AVD | `Medium_Phone` (API 37.0) exists; NEVER launched; `adb devices` empty |
+ | Expo Android config / EAS | `app.json` CAMERA permission + icons present; NO `android.package`, NO `eas.json` |
+ | Git baseline | Commit `5f45d5a` (69 files) 2026-10-13; recovery verification 2026-10-14 green, second commit + GitHub push pending at time of writing |
 
 ## Implemented vs unimplemented (as of 2026-10-13)
 
@@ -141,12 +198,15 @@ still pending (see Blockers).**
   physical-device or emulator builds/runs, server-side history, fine-tuning, signing,
   deployment.
 
-## Blockers (as of 2026-10-13T13:29:00+05:30)
+## Blockers (as of 2026-10-13T13:59:48+05:30)
 
-1. Android Studio/SDK status unchanged/unchecked → no emulator/ADB validation.
-   **This is now THE gating blocker: it prevents any end-to-end verification of the
-   Phase 3 mobile MVP (camera, upload, render, SQLite on-device).**
-2. Java 8 on PATH is a trap for future Gradle builds → must use Studio-bundled JDK 17+.
+1. Android toolchain present but P3-VERIFY not started: Studio + SDK + `Medium_Phone`
+   AVD exist (verified 2026-10-13), yet NO emulator has ever been launched and NO app
+   run observed. Next action: launch AVD → `npx expo start --android` (backend via
+   `10.0.2.2:8000`). `ANDROID_HOME` unset and no `android.package`/`eas.json` are
+   minor gaps for later (Expo Go run needs neither).
+2. PATH `java` is still 1.8.0_401 (trap for Gradle) → builds must use `JAVA_HOME`
+   Adoptium JDK 21. Never put Java 8 on the build path.
 3. No checkpoint/dataset cleared for COMMERCIAL use or redistribution (PosFormer
    academic-only/ambiguous, BTTR weights unstated, all datasets NC). Research/eval
    use is fine; product use needs legal clearance + permissive data. **Unresolved.**

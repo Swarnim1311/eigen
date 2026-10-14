@@ -1,6 +1,6 @@
 # ARCHITECTURE — Eigen
 
-**Last updated:** `2026-10-13T13:29:00+05:30` (Phase 3 verification: mobile MVP recorded)
+**Last updated:** `2026-10-14T08:12:31+05:30` (Recovery verification recorded)
 
 ## Current (actually implemented) architecture
 
@@ -15,7 +15,8 @@ mobile/eigen-mobile (Expo 57, Expo Router, TypeScript strict)
     -> result (evaluate/simplify/solve, conditional ops UI, auto-save)
     -> history (SQLite list/detail/reopen/delete/clear-all, missing-file grace)
   src/api/ (client.ts: EXPO_PUBLIC_API_URL -> Expo host -> 10.0.2.2:8000;
-    validated responses; math 30 s timeout; per-code hints)
+    validated responses; math 30 s timeout; per-code hints;
+    anySignal() fallback for runtimes without native AbortSignal.any)
   src/components/LatexView.tsx (katex.renderToString -> offline WebView,
     JS disabled, no remotes; pinned katex.min.css bundled verbatim as
     katexCss.ts since 2026-10-13; webfonts NOT bundled -> serif fallback;
@@ -26,14 +27,21 @@ mobile/eigen-mobile (Expo 57, Expo Router, TypeScript strict)
 backend/ (FastAPI 0.118, Python 3.11 venv)
   GET /         -> {"service","health"}
   GET /health   -> {"status":"ok","service":"eigen-backend"}
-  POST /api/v1/recognize + /api/v1/math/* + GET /api/v1/ready (v0.2.0, Phase 2)
-  tests/ (28 passed + 1 gated, 2026-10-13 re-verified)
+   POST /api/v1/recognize + /api/v1/math/* + GET /api/v1/ready (v0.2.0, Phase 2)
+   tests/ (34 passed + 1 skipped + 1 gated real-worker, 2026-10-14 re-verified;
+     includes test_security.py AST+HTTP guards)
 
-ml/             -> Phase-1 standalone harness: scripts/ (pl_compat, render,
-  run_posformer, evaluate_baseline) + Phase-2 recognizer_worker.py (persistent
-  stdio inference server, loads best.ckpt once), requirements.txt + lock,
-  checkpoints/ (git-ignored), data/ (git-ignored),
-  experiments/posformer_run1.json, reports/inference_baseline.md
+ ml/             -> Phase-1 standalone harness: scripts/ (pl_compat, render,
+   run_posformer --beam-size/--max-len/--alpha/--early-stopping/--temperature
+   CLI overrides, defaults repo-exact, 2026-10-13, evaluate_baseline,
+   smoke_check.py offline checks) + Phase-2 recognizer_worker.py (persistent
+   stdio inference server, loads best.ckpt once, STILL repo-exact T=1.0 —
+   serving default unchanged by decision §22), requirements.txt + lock,
+   checkpoints/ (git-ignored), data/ (git-ignored),
+   experiments/posformer_run1.json + run2_temp05/run3_l40_t10/run4_l40_t05 +
+   run2_summary.json, reports/inference_baseline.md + recognition_temp05.md
+   (T=0.5 experimental: 0.912 -> 0.860 mean CER on same 30, 0/40 exact both —
+   NOT deployed)
 docs/           -> context system (this file set) + empty architecture//decisions/ stubs
 ```
 

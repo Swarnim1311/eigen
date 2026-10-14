@@ -46,10 +46,16 @@ from Pos_Former.model.posformer import PosFormer  # noqa: E402
 from torchvision.transforms import ToTensor  # noqa: E402
 
 MODEL_KWARGS = dict(d_model=256, growth_rate=24, num_layers=16, nhead=8,
-                    num_decoder_layers=3, dim_feedforward=1024, dropout=0.3,
-                    dc=32, cross_coverage=True, self_coverage=True)
-BEAM = dict(beam_size=10, max_len=200, alpha=1.0,
-            early_stopping=False, temperature=1.0)
+                     num_decoder_layers=3, dim_feedforward=1024, dropout=0.3,
+                     dc=32, cross_coverage=True, self_coverage=True)
+# Repo config.yaml decoding values — also the CLI defaults below, so a plain
+# run reproduces the released-model behavior exactly.
+BEAM_DEFAULTS = dict(beam_size=10, max_len=200, alpha=1.0,
+                     early_stopping=False, temperature=1.0)
+# Back-compat alias: recognizer_worker.py calls model.beam_search(**rp.BEAM).
+# Keep it pinned to the repo-exact defaults — decoding experiments pass
+# explicit overrides instead (see --temperature etc.).
+BEAM = dict(BEAM_DEFAULTS)
 
 _scaler = ScaleToLimitRange(w_lo=16, w_hi=1024, h_lo=16, h_hi=256)
 _to_tensor = ToTensor()
@@ -96,7 +102,18 @@ def main():
     ap.add_argument("--polarity", default="b", choices=["w", "b"])
     ap.add_argument("--limit", type=int, default=30)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--beam-size", type=int, default=BEAM_DEFAULTS["beam_size"])
+    ap.add_argument("--max-len", type=int, default=BEAM_DEFAULTS["max_len"])
+    ap.add_argument("--alpha", type=float, default=BEAM_DEFAULTS["alpha"])
+    ap.add_argument("--early-stopping", action="store_true",
+                    default=BEAM_DEFAULTS["early_stopping"])
+    ap.add_argument("--temperature", type=float,
+                    default=BEAM_DEFAULTS["temperature"])
     args = ap.parse_args()
+    beam = dict(beam_size=args.beam_size, max_len=args.max_len,
+                alpha=args.alpha, early_stopping=args.early_stopping,
+                temperature=args.temperature)
+    print(f"beam: {beam}", flush=True)
 
     pairs = []
     with open(args.labels, encoding="utf-8") as f:
@@ -123,7 +140,7 @@ def main():
             png = os.path.join(args.renders, f"{sid}_{args.polarity}.png")
             img, mask = preprocess(png)
             t0 = time.time()
-            hyps = model.beam_search(img, mask, **BEAM)
+            hyps = model.beam_search(img, mask, **beam)
             dt = time.time() - t0
             pred = vocab.indices2label(hyps[0].seq)
             results.append({"id": sid, "gt": gt, "pred": pred,
@@ -133,7 +150,7 @@ def main():
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump({"ckpt": ckpt_used, "polarity": args.polarity,
-                   "beam": BEAM, "results": results}, f, indent=1)
+                   "beam": beam, "results": results}, f, indent=1)
     print(f"wrote {args.out}", flush=True)
 
 

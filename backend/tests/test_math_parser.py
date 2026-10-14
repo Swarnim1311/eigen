@@ -144,3 +144,23 @@ def test_unbound_variable():
     with pytest.raises(mp.MathError) as e:
         ev("x+1")
     assert e.value.code == "unbound_variable"
+
+
+def test_unary_and_juxtaposition_edges():
+    # Lock in currently-correct exact-arithmetic behavior:
+    assert ev("2*-3") == -6
+    assert ev("(-2)^2") == 4
+    assert ev("-(2+3)") == -5
+    assert ev("2sqrt(4)") == 4  # implicit mult before sqrt()
+    assert ev("3(4)") == 12
+    assert ev("1/2/2") == mp.Rational(1, 4)  # left-associative division
+    assert ev("2^0.5") == ev("sqrt(2)")  # exact, not 1.41421356...
+    assert ev("sqrt(2)^2") == 2
+    assert ev("x^2", {"x": 5}) == 25
+
+
+def test_degenerate_equations_rejected():
+    for bad in ["0=0", "x=x", "1=1"]:
+        with pytest.raises(mp.MathError) as e:
+            mp.solve_equation(*mp.parse_equation(bad), "x")
+        assert e.value.code == "solve_failed"
